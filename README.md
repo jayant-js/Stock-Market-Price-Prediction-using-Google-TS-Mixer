@@ -52,13 +52,3 @@ The goal of this project is to accurately forecast stock price movements over a 
 - Seamlessly integrated technical indicators to boost the predictive strength of the model.
 
 ---
-
-## 📁 Project Structure
-
-```bash
-.
-├── data/                   # Raw and processed stock data
-├── notebooks/              # Jupyter notebooks for EDA and modeling
-├── models/                 # Saved models (if applicable)
-├── utils/                  # Utility scripts for preprocessing and indicators
-├── README.md               # Project documentation
