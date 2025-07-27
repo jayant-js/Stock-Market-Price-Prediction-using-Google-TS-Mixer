@@ -108,42 +108,55 @@ class DartsModelWrapper(BaseEstimator, TransformerMixin):
             **self.model_params
         )
 
-        train_series = series_scaled[:-self.output_chunk_length]
-        val_series = series_scaled[-self.output_chunk_length:]
+        # train_series = series_scaled[:-self.output_chunk_length]
+        # val_series = series_scaled[-self.output_chunk_length:]
 
-        train_past_covariates = past_covariates_scaled[:-self.output_chunk_length]
+        # train_past_covariates = past_covariates_scaled[:-self.output_chunk_length]
 
-        self.model.fit(
-            series = train_series,
-            past_covariates = train_past_covariates,
-            verbose=True
-        )
+        # self.model.fit(
+        #     series = train_series,
+        #     past_covariates = train_past_covariates,
+        #     verbose=True
+        # )
 
-        y_pred_scaled = self.model.predict(n=self.output_chunk_length)
-        validation_mape = mape(val_series, y_pred_scaled)
-        print(f"Validation MAPE: {validation_mape:.2f}%")
+        # y_pred_scaled = self.model.predict(n=self.output_chunk_length)
+        # validation_mape = mape(val_series, y_pred_scaled)
+        # print(f"Validation MAPE: {validation_mape:.2f}%")
 
-        print("Retraining model on full dataset for future predictions...")
+        # print("Retraining model on full dataset for future predictions...")
         self.model.fit(
             series = series_scaled,
             past_covariates = past_covariates_scaled,
             verbose = False
         )
-        print('Final Model Fitting complete')
+        self.last_input_df = df.copy()
+        # print('Final Model Fitting complete')
         return self
-
-    def predict(self, X, forecast_horizon, y=None):
-        if not self.model:
-            raise RuntimeError("The model has not been fitted yet")
     
-        if forecast_horizon is None:
-            raise ValueError('`forecast_horizon` must be provided to make prediction.')
+   # ...existing code...
+    def predict(self, n: int = 7):
+        if not self.model:
+            raise RuntimeError('The model is not fitted yet')
+        forecast_scaled = self.model.predict(n=n)
+        forecast_original = self.target_scaler.inverse_transform(forecast_scaled)
+    def predict(self, n: int = 7):
+        if not self.model:
+            raise RuntimeError('The model is not fitted yet')
+        forecast_scaled = self.model.predict(n=n)
+        forecast_original = self.target_scaler.inverse_transform(forecast_scaled) 
+        return forecast_original.to_dataframe()     
+
+    def save_model(self, path: str):
+        self.model.save(path)
+        joblib.dump(self.target_scaler, 'target_scaler.joblib')
+        joblib.dump(self.covariates_scaler, 'covariates_scaler.joblib')
+    
+    def load_model(self, path):
+        self.model = TSMixerModel.load(path)
+        self.target_scaler = joblib.load('target_scaler.joblib')
+        self.covariates_scaler = joblib.load('covariates_scaler.joblib')
+        return self
         
-        n_forecast = forecast_horizon
-        scaled_prediction = self.model.predict(n=n_forecast)
-        original_scale_prediction = self.target_scaler.inverse_transform(scaled_prediction)
-        print("Prediction Complete.")
-        return original_scale_prediction.to_dataframe()
 
 def create_pipeline(ticker:str, forecast_horizon: int = 7):
     model_params = {
