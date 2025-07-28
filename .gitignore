@@ -4,3 +4,4 @@ target_scaler.joblib
 forecast.csv
 stock_prediction_model.pt
 stock_prediction_model.pt.ckpt
+notebooks

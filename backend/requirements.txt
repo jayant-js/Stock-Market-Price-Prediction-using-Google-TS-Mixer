@@ -1,0 +1,10 @@
+fastapi
+uvicorn 
+numpy
+pandas
+darts 
+scikit-learn
+statsmodels
+ta
+yfinance
+joblib
