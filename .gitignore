@@ -3,4 +3,4 @@ covariates_scaler.joblib
 target_scaler.joblib
 forecast.csv
 stock_prediction_model.pt
-stock_prediction_model.pt.cpkt
+stock_prediction_model.pt.ckpt

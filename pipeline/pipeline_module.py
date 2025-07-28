@@ -133,12 +133,6 @@ class DartsModelWrapper(BaseEstimator, TransformerMixin):
         # print('Final Model Fitting complete')
         return self
     
-   # ...existing code...
-    def predict(self, n: int = 7):
-        if not self.model:
-            raise RuntimeError('The model is not fitted yet')
-        forecast_scaled = self.model.predict(n=n)
-        forecast_original = self.target_scaler.inverse_transform(forecast_scaled)
     def predict(self, n: int = 7):
         if not self.model:
             raise RuntimeError('The model is not fitted yet')
@@ -157,13 +151,12 @@ class DartsModelWrapper(BaseEstimator, TransformerMixin):
         self.covariates_scaler = joblib.load('covariates_scaler.joblib')
         return self
         
-
 def create_pipeline(ticker:str, forecast_horizon: int = 7):
     model_params = {
-        'input_chunk_length':32,
-        'ff_size':32,
-        'num_blocks':4,
-        'hidden_size': 64,
+        'input_chunk_length':14,
+        'ff_size':9,
+        'num_blocks':8,
+        'hidden_size':5,
         'n_epochs':7,
         'use_reversible_instance_norm':True,
         # 'pl_trainer_kwargs':{'accelerator':'gpu', 'devices':[0]}
