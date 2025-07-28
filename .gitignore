@@ -1,7 +1,6 @@
 stock-market
-covariates_scaler.joblib
-target_scaler.joblib
-forecast.csv
-stock_prediction_model.pt
-stock_prediction_model.pt.ckpt
+backend/covariates_scaler.joblib
+backend/target_scaler.joblib
+backend/stock_prediction_model.pt
+backend/stock_prediction_model.pt.ckpt
 notebooks
