@@ -1,9 +1,0 @@
-fastapi
-uvicorn 
-numpy
-pandas
-darts 
-scikit-learn
-ta
-yfinance
-joblib
