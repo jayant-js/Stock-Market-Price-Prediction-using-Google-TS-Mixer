@@ -1,6 +1,13 @@
-stock-market
-backend/covariates_scaler.joblib
-backend/target_scaler.joblib
-backend/stock_prediction_model.pt
-backend/stock_prediction_model.pt.ckpt
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# User
 notebooks
