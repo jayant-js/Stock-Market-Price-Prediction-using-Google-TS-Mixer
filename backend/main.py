@@ -10,7 +10,7 @@ def load_pipeline():
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
-    app.state.pipe = load_pipeline()
+    app.state.pipe = Thread(load_pipeline()).start()
     yield
 
 app = FastAPI(lifespan=lifespan)
