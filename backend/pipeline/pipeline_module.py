@@ -1,6 +1,4 @@
-from darts.models import TSMixerModel
-from darts import TimeSeries
-from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 import yfinance as yf
 import pandas as pd
@@ -48,8 +46,9 @@ BASE_DIR = Path(__file__).parent
 def encode_year(idx: pd.DatetimeIndex):
     return (idx.year - 2000)/50
 
-class DartsPredictionTransformer(BaseEstimator, RegressorMixin):
+class DartsPredictionTransformer(BaseEstimator):
     def __init__(self):
+        from darts.models import TSMixerModel
         self.covariates_scaler = load(f'{BASE_DIR}/model-files/scaler_covariates.joblib')
         self.target_scaler = load(f'{BASE_DIR}/model-files/scaler_target.joblib')
         self.model = TSMixerModel.load(f'{BASE_DIR}/model-files/my_ts_mixer_model.pt')
@@ -59,6 +58,7 @@ class DartsPredictionTransformer(BaseEstimator, RegressorMixin):
         return self
     
     def predict(self, X, forecast_horizon: int) -> pd.DataFrame:
+        from darts import TimeSeries
         target_series = TimeSeries.from_dataframe(X, value_cols=['Adj Close'], freq='D')
         past_covariates_series = TimeSeries.from_dataframe(X.drop(columns=['Adj Close']), freq='D')
 
