@@ -37,10 +37,13 @@ if st.button('Get 7-Day Forecast'):
     else:
         with st.spinner(f'Fetching forecast for {ticker}...'):
             try:
-                api_url = f'http://127.0.0.1:8000/predict/{ticker}'
+                api_url = f'https://stock-prediction-backend-st7k.onrender.com/predict/{ticker}'
                 response = requests.get(api_url)
 
-                if response.status_code == 200:
+                if response.status_code==503:
+                    st.warning('Model is still loading on the server. Please try again in few seconds.')
+
+                elif response.status_code == 200:
                     data = response.json()
                     
                     st.success(f"Forecast for {data.get('ticker')} received!")
@@ -84,7 +87,7 @@ if st.button('Get 7-Day Forecast'):
                         display_df['Adj Close'] = display_df['Adj Close'].map('₹{:,.2f}'.format)
 
                 else:
-                    error_detail = response.json().get('detail')
+                    error_detail = response.json().get('detail', 'unknown error')
                     st.error(f"Error from API: {error_detail} (Status code: {response.status_code})")
             
             except requests.exceptions.ConnectionError:
