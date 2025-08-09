@@ -2,12 +2,12 @@ from fastapi import FastAPI, Path, HTTPException
 from contextlib import asynccontextmanager
 import pandas as pd
 import sys
-from backend.Pipeline.pipeline_module import create_prediction_pipeline, gather_ticker_data, encode_year
+from pipeline.pipeline_module import create_prediction_pipeline, gather_ticker_data, encode_year
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
     sys.modules["__main__"].encode_year = encode_year # type: ignore
-    app.state.pipeline = create_prediction_pipeline()
+    app.state.pipe = create_prediction_pipeline()
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -19,8 +19,8 @@ def intro():
 @app.get('/predict/{ticker}')
 def get_predictions(ticker = Path(..., description='Give the Ticker Symbol here')):
     try:
-        new_data = gather_ticker_data(ticker_symbogitl=ticker)
-        pipeline = app.state.pipeline
+        new_data = gather_ticker_data(ticker_symbol=ticker)
+        pipeline = app.state.pipe
         forecast = pipeline.predict(new_data, forecast_horizon = 7)
         response = {
             'ticker':ticker,
