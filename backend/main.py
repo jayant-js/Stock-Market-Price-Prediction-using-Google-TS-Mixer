@@ -3,14 +3,14 @@ from contextlib import asynccontextmanager
 import pandas as pd
 import sys
 from threading import Thread
-from pipeline.pipeline_module import create_prediction_pipeline, gather_ticker_data, encode_year
 
 def load_pipeline():
+    from pipeline.pipeline_module import create_prediction_pipeline, encode_year
+    sys.modules["__main__"].encode_year = encode_year # type: ignore
     app.state.pipe = create_prediction_pipeline()
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
-    sys.modules["__main__"].encode_year = encode_year # type: ignore
     Thread(target=load_pipeline).start()
     yield
 
@@ -23,6 +23,7 @@ def intro():
 @app.get('/predict/{ticker}')
 def get_predictions(ticker = Path(..., description='Give the Ticker Symbol here')):
     try:
+        from pipeline.pipeline_module import gather_ticker_data
         new_data = gather_ticker_data(ticker_symbol=ticker)
         pipeline = app.state.pipe
         forecast = pipeline.predict(new_data, forecast_horizon = 7)
