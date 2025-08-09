@@ -7,8 +7,8 @@ from pipeline.pipeline_module import create_prediction_pipeline, gather_ticker_d
 @asynccontextmanager
 async def lifespan(app:FastAPI):
     sys.modules["__main__"].encode_year = encode_year # type: ignore
-    app.state.pipe = create_prediction_pipeline()
     yield
+    app.state.pipe = create_prediction_pipeline()
 
 app = FastAPI(lifespan=lifespan)
 
