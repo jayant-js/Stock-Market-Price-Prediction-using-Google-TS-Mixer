@@ -1,0 +1,5 @@
+darts
+fastapi
+ta
+uvicorn
+yfinance
