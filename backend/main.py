@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Path, HTTPException
 from contextlib import asynccontextmanager
-import pandas as pd
 import sys
 from threading import Thread
 
