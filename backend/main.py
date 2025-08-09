@@ -2,7 +2,7 @@ from fastapi import FastAPI, Path, HTTPException
 from contextlib import asynccontextmanager
 import pandas as pd
 import sys
-from Pipeline.pipeline_module import create_prediction_pipeline, gather_ticker_data, encode_year
+from backend.Pipeline.pipeline_module import create_prediction_pipeline, gather_ticker_data, encode_year
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
