@@ -2,13 +2,17 @@ from fastapi import FastAPI, Path, HTTPException
 from contextlib import asynccontextmanager
 import pandas as pd
 import sys
+from threading import Thread
 from pipeline.pipeline_module import create_prediction_pipeline, gather_ticker_data, encode_year
+
+def load_pipeline():
+    app.state.pipe = create_prediction_pipeline()
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
     sys.modules["__main__"].encode_year = encode_year # type: ignore
+    Thread(target=load_pipeline).start()
     yield
-    app.state.pipe = create_prediction_pipeline()
 
 app = FastAPI(lifespan=lifespan)
 
