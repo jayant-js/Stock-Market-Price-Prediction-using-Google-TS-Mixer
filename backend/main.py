@@ -6,12 +6,11 @@ from threading import Thread
 def load_pipeline():
     from pipeline.pipeline_module import create_prediction_pipeline, encode_year
     sys.modules["__main__"].encode_year = encode_year # type: ignore
-    app.state.pipe = create_prediction_pipeline()
+    return create_prediction_pipeline()
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
-    app.state.pipe = None
-    Thread(target=load_pipeline).start()
+    app.state.pipe = load_pipeline()
     yield
 
 app = FastAPI(lifespan=lifespan)
